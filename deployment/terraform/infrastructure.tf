@@ -19,6 +19,16 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
+variable "vpc_id" {
+  type        = string
+  description = "The VPC ID to deploy the EKS cluster in"
+}
+
+variable "subnet_ids" {
+  type        = list(string)
+  description = "The subnet IDs to deploy the EKS cluster in"
+}
+
 # EKS Cluster Provisioning for EKOS Platform
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
