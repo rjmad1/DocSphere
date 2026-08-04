@@ -1,0 +1,41 @@
+replicaCount: 3
+
+image:
+  repository: ekos/platform-backend
+  pullPolicy: IfNotPresent
+  tag: "1.0.0-MVP"
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: ekos.internal.enterprise.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 75
+
+env:
+  NEO4J_URI: "bolt://neo4j-service:7687"
+  QDRANT_HOST: "qdrant-service"
+  POSTGRES_URI: "postgresql://ekos_user:ekos_pass@postgres-service:5432/ekos_db"
+  REDIS_HOST: "redis-service"

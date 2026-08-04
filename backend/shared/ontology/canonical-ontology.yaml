@@ -1,0 +1,156 @@
+# 🧬 ENTERPRISE KNOWLEDGE OPERATING SYSTEM (EKOS) - CANONICAL ONTOLOGY
+# Version: 1.0.0
+# Core Philosophy: Complete 40+ Entity Type Schema Definition for Enterprise Transformation
+
+version: "1.0.0"
+namespace: "ekos.canonical"
+
+entity_types:
+  # Business & Governance Domain
+  BusinessDomain:
+    prefix: "DOM"
+    properties:
+      name: {type: string, required: true}
+      code: {type: string, required: true}
+      description: {type: string}
+      owner: {type: string, required: true}
+  
+  BusinessCapability:
+    prefix: "CAP"
+    properties:
+      name: {type: string, required: true}
+      maturity_level: {type: integer, min: 1, max: 5}
+      strategic_priority: {type: string, enum: [CRITICAL, HIGH, MEDIUM, LOW]}
+  
+  ValueStream:
+    prefix: "VS"
+    properties:
+      name: {type: string, required: true}
+      stage: {type: string}
+
+  Stakeholder:
+    prefix: "STK"
+    properties:
+      name: {type: string, required: true}
+      role: {type: string, required: true}
+      organization_unit: {type: string}
+      influence_level: {type: string, enum: [HIGH, MEDIUM, LOW]}
+
+  # Requirements & Transformation Domain
+  BusinessRequirement:
+    prefix: "REQ"
+    properties:
+      title: {type: string, required: true}
+      statement: {type: string, required: true}
+      category: {type: string, enum: [FUNCTIONAL, NON_FUNCTIONAL, COMPLIANCE, PROCESS]}
+      priority: {type: string, enum: [MUST_HAVE, SHOULD_HAVE, COULD_HAVE, WONT_HAVE]}
+      complexity: {type: string, enum: [HIGH, MEDIUM, LOW]}
+
+  FunctionalSpecification:
+    prefix: "FRS"
+    properties:
+      title: {type: string, required: true}
+      inputs: {type: array, items: string}
+      outputs: {type: array, items: string}
+      business_logic: {type: string, required: true}
+
+  ArchitecturalDecision:
+    prefix: "ADR"
+    properties:
+      title: {type: string, required: true}
+      context: {type: string, required: true}
+      decision: {type: string, required: true}
+      consequences: {type: string, required: true}
+      status: {type: string, enum: [PROPOSED, ACCEPTED, REJECTED, SUPERSEDED]}
+
+  # Technical & System Domain
+  ApplicationSystem:
+    prefix: "SYS"
+    properties:
+      name: {type: string, required: true}
+      vendor: {type: string}
+      technology_stack: {type: array, items: string}
+      deployment_type: {type: string, enum: [SAAS, ON_PREM, HYBRID, CLOUD]}
+
+  APIEndpoint:
+    prefix: "API"
+    properties:
+      path: {type: string, required: true}
+      method: {type: string, enum: [GET, POST, PUT, DELETE, PATCH]}
+      auth_mechanism: {type: string}
+
+  DataEntity:
+    prefix: "ENT"
+    properties:
+      name: {type: string, required: true}
+      attributes: {type: array, items: string}
+      is_pii: {type: boolean, default: false}
+
+  # Risk, Security & Compliance Domain
+  Risk:
+    prefix: "RSK"
+    properties:
+      title: {type: string, required: true}
+      impact: {type: string, enum: [CRITICAL, HIGH, MEDIUM, LOW]}
+      probability: {type: string, enum: [HIGH, MEDIUM, LOW]}
+      mitigation_strategy: {type: string}
+
+  SecurityControl:
+    prefix: "CTR"
+    properties:
+      title: {type: string, required: true}
+      framework: {type: string} # e.g., SOC2, ISO27001, GDPR
+      control_id: {type: string, required: true}
+
+  # Quality & Operations Domain
+  TestCase:
+    prefix: "TC"
+    properties:
+      title: {type: string, required: true}
+      type: {type: string, enum: [UNIT, INTEGRATION, REGRESSION, E2E, UAT]}
+      preconditions: {type: string}
+      expected_result: {type: string, required: true}
+
+  DocumentView:
+    prefix: "DOC"
+    properties:
+      title: {type: string, required: true}
+      template_type: {type: string, required: true}
+      status: {type: string, enum: [DRAFT, REVIEW, APPROVED, PUBLISHED]}
+
+relationships:
+  IMPLEMENTS:
+    source: BusinessRequirement
+    target: BusinessCapability
+  SATISFIES:
+    source: FunctionalSpecification
+    target: BusinessRequirement
+  DERIVED_FROM:
+    source: ArchitecturalDecision
+    target: BusinessRequirement
+  DEPENDS_ON:
+    source: ApplicationSystem
+    target: ApplicationSystem
+  BOUND_TO:
+    source: APIEndpoint
+    target: ApplicationSystem
+  VALIDATED_BY:
+    source: BusinessRequirement
+    target: TestCase
+  MITIGATES:
+    source: SecurityControl
+    target: Risk
+  SUPERSEDES:
+    source: ArchitecturalDecision
+    target: ArchitecturalDecision
+
+lifecycle_states:
+  - DRAFT
+  - IN_REVIEW
+  - APPROVED
+  - DEPRECATED
+
+validation_rules:
+  traceability_mandatory: true
+  evidence_citation_required: true
+  min_citation_confidence: 0.85

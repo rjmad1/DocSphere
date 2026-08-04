@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  neo4j:
+    image: neo4j:5.12-community
+    container_name: ekos-neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/ekos_password_2026
+      - NEO4J_PLUGINS=["apoc"]
+    volumes:
+      - neo4j_data:/data
+
+  qdrant:
+    image: qdrant/qdrant:v1.6.1
+    container_name: ekos-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  redis:
+    image: redis:7-alpine
+    container_name: ekos-redis
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: ekos-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=ekos_db
+      - POSTGRES_USER=ekos_user
+      - POSTGRES_PASSWORD=ekos_pass
+
+volumes:
+  neo4j_data:
+  qdrant_data:

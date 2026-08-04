@@ -1,0 +1,9 @@
+apiVersion: v2
+name: ekos-platform
+description: Helm chart for Enterprise Knowledge Operating System (EKOS) production platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0-MVP"
+maintainers:
+  - name: EKOS Platform Team
+    email: devops@ekos.io
