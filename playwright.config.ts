@@ -42,5 +42,18 @@ export default defineConfig({
       name: 'mobile-chrome',
       use: { ...devices['Pixel 5'] },
     }
+  ],
+  webServer: [
+    {
+      command: 'npm run dev -- --port 3000',
+      cwd: './frontend',
+      port: 3000,
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'python -m uvicorn backend.main:app --port 8000',
+      port: 8000,
+      reuseExistingServer: !process.env.CI,
+    }
   ]
 });

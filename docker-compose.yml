@@ -38,6 +38,26 @@ services:
       - POSTGRES_USER=ekos_user
       - POSTGRES_PASSWORD=ekos_pass
 
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ekos-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_URI=postgresql://ekos_user:ekos_pass@postgres:5432/ekos_db
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=ekos_password_2026
+      - QDRANT_HOST=qdrant
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - neo4j
+      - qdrant
+      - redis
+
 volumes:
   neo4j_data:
   qdrant_data:

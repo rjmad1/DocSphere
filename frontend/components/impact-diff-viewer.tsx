@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface ImpactDiffViewerProps {
-  eventId?: str;
+  eventId?: string;
   onApprove?: () => void;
   onReject?: () => void;
 }
@@ -24,7 +24,7 @@ export const ImpactDiffViewer: React.FC<ImpactDiffViewerProps> = ({
   };
 
   return (
-    <div className="w-full bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col gap-5 text-slate-100 shadow-2xl">
+    <div data-testid="impact-diff-viewer" className="w-full bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col gap-5 text-slate-100 shadow-2xl">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-800 pb-4">
         <div>
@@ -44,6 +44,7 @@ export const ImpactDiffViewer: React.FC<ImpactDiffViewerProps> = ({
               Reject Change
             </button>
             <button 
+              data-testid="publish-diff-button"
               onClick={handleApprove}
               className="px-4 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded hover:bg-emerald-500 transition shadow-lg"
             >
@@ -51,7 +52,7 @@ export const ImpactDiffViewer: React.FC<ImpactDiffViewerProps> = ({
             </button>
           </div>
         ) : (
-          <span className={`text-xs font-bold px-3 py-1 rounded border ${decision === 'APPROVED' ? 'bg-emerald-950 border-emerald-700 text-emerald-300' : 'bg-red-950 border-red-700 text-red-300'}`}>
+          <span data-testid="diff-status-badge" className={`text-xs font-bold px-3 py-1 rounded border ${decision === 'APPROVED' ? 'bg-emerald-950 border-emerald-700 text-emerald-300' : 'bg-red-950 border-red-700 text-red-300'}`}>
             DECISION: {decision}
           </span>
         )}
@@ -65,7 +66,7 @@ export const ImpactDiffViewer: React.FC<ImpactDiffViewerProps> = ({
             <span className="text-xs font-bold text-red-400 uppercase tracking-wider">Current Active Baseline (v1.0.0)</span>
             <span className="text-[11px] text-slate-500">DOC-BRD-001</span>
           </div>
-          <div className="p-3 bg-red-950/20 border border-red-900/30 rounded text-xs text-slate-300 font-mono leading-relaxed">
+          <div data-testid="diff-before" className="p-3 bg-red-950/20 border border-red-900/30 rounded text-xs text-slate-300 font-mono leading-relaxed">
             The system performs multi-currency journal reconciliation on a weekly schedule every Friday EOD.
           </div>
         </div>
@@ -76,7 +77,7 @@ export const ImpactDiffViewer: React.FC<ImpactDiffViewerProps> = ({
             <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">AI Recommended Update (v1.1.0)</span>
             <span className="text-[11px] text-slate-500">Citation Confidence: 98%</span>
           </div>
-          <div className="p-3 bg-emerald-950/20 border border-emerald-900/30 rounded text-xs text-slate-300 font-mono leading-relaxed">
+          <div data-testid="diff-after" className="p-3 bg-emerald-950/20 border border-emerald-900/30 rounded text-xs text-slate-300 font-mono leading-relaxed">
             The system shall execute automated multi-currency journal reconciliations at end-of-day.
           </div>
         </div>

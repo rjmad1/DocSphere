@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface KnowledgeExplorerProps {
-  rootEntityId?: str;
+  rootEntityId?: string;
 }
 
 export const KnowledgeExplorer: React.FC<KnowledgeExplorerProps> = ({
@@ -11,7 +11,7 @@ export const KnowledgeExplorer: React.FC<KnowledgeExplorerProps> = ({
   const [depth, setDepth] = useState<number>(2);
 
   return (
-    <div className="w-full h-full bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col gap-4 text-slate-100">
+    <div data-testid="cytoscape-graph-explorer" className="w-full h-full bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col gap-4 text-slate-100">
       {/* Visualizer Header */}
       <div className="flex items-center justify-between border-b border-slate-800 pb-3">
         <div className="flex items-center gap-3">
@@ -40,6 +40,7 @@ export const KnowledgeExplorer: React.FC<KnowledgeExplorerProps> = ({
       <div className="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-6 flex items-center justify-center relative overflow-hidden">
         <div className="flex flex-col items-center gap-8 z-10">
           <div 
+            data-node-id="CAP-0012"
             onClick={() => setSelectedNode("CAP-0012")}
             className="p-4 bg-emerald-950/60 border border-emerald-600/60 rounded-xl text-center cursor-pointer hover:scale-105 transition shadow-lg"
           >
@@ -53,6 +54,7 @@ export const KnowledgeExplorer: React.FC<KnowledgeExplorerProps> = ({
           </div>
 
           <div 
+            data-node-id="REQ-00847"
             onClick={() => setSelectedNode("REQ-00847")}
             className="p-4 bg-indigo-950/60 border border-indigo-600/60 rounded-xl text-center cursor-pointer hover:scale-105 transition shadow-lg"
           >

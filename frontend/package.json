@@ -1,0 +1,22 @@
+{
+  "name": "docsphere-frontend",
+  "version": "1.0.0",
+  "description": "DocSphere (EKOS) frontend React application",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0"
+  }
+}

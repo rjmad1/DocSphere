@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
 interface DocumentEditorProps {
-  documentId: str;
-  title: str;
-  initialContent?: str;
+  documentId: string;
+  title: string;
+  initialContent?: string;
   onContentChange?: (content: string) => void;
 }
 
@@ -43,6 +43,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
       {/* Editor Body */}
       <div className="flex flex-col gap-3">
         <textarea
+          data-testid="tiptap-editor-pane"
           value={content}
           onChange={handleTextChange}
           rows={8}
@@ -52,7 +53,7 @@ export const DocumentEditor: React.FC<DocumentEditorProps> = ({
         {/* Live Entity Chips Footer */}
         <div className="flex items-center gap-2 pt-2 border-t border-slate-800/60">
           <span className="text-xs text-slate-400 font-medium">Bound Entities:</span>
-          <span className="text-xs bg-indigo-950 border border-indigo-700 text-indigo-300 px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer">
+          <span data-testid="entity-node-tag" className="text-xs bg-indigo-950 border border-indigo-700 text-indigo-300 px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer">
             🏷️ REQ-00847
           </span>
           <span className="text-xs bg-indigo-950 border border-indigo-700 text-indigo-300 px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer">
