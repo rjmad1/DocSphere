@@ -1,6 +1,6 @@
 import uuid
 from typing import List, Dict, Optional, AsyncGenerator
-from datetime import datetime
+from datetime import datetime, timezone
 import asyncio
 from pydantic import BaseModel, Field
 import logging
@@ -15,7 +15,7 @@ class ChatMessage(BaseModel):
     role: str  # user, assistant, system
     content: str
     citations: List[str] = Field(default_factory=list)
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class Conversation(BaseModel):
     """Represents a chat conversation."""
@@ -23,8 +23,8 @@ class Conversation(BaseModel):
     tenant_id: str
     title: str
     messages: List[ChatMessage] = Field(default_factory=list)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class ChatRequest(BaseModel):
     """Request to send a message and get a response."""
@@ -62,7 +62,7 @@ class ConversationManager:
         conversation = self._conversations.get(conversation_id)
         if conversation:
             conversation.messages.append(message)
-            conversation.updated_at = datetime.utcnow()
+            conversation.updated_at = datetime.now(timezone.utc)
         return conversation
 
     def delete_conversation(self, conversation_id: str) -> bool:

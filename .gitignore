@@ -24,7 +24,10 @@ wheels/
 # Testing & Coverage
 .pytest_cache/
 .coverage
+.coveragerc
 htmlcov/
+test-results/
+playwright-report/
 
 # Node / Frontend
 node_modules/
@@ -44,3 +47,20 @@ dist/
 .DS_Store
 Thumbs.db
 *.log
+
+# Secrets — NEVER commit these
+.env
+.env.local
+.env.production
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local databases (SQLite files committed accidentally)
+*.db
+*.sqlite
+*.sqlite3
+
+# Generated / runtime artifacts
+ekos_production.db

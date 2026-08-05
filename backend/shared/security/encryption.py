@@ -7,17 +7,29 @@ import base64
 import hashlib
 import os
 import logging
+from typing import Optional
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("EKOS-Encryption")
 
 class EnvelopeEncryptionService:
-    def __init__(self, master_key: str = "default_ekos_master_cmek_2026_key_32b"):
+    def __init__(self, master_key: Optional[str] = None):
+        if master_key is None:
+            master_key = os.getenv("EKOS_MASTER_KEY")
+            
+        # Refuse to boot on default/empty key in non-test environment
+        if not master_key or master_key == "default_ekos_master_cmek_2026_key_32b":
+            if "PYTEST_CURRENT_TEST" in os.environ:
+                master_key = "default_ekos_master_cmek_2026_key_32b"
+            else:
+                raise ValueError("EKOS_MASTER_KEY environment variable is not configured and defaults are prohibited in production.")
+                
         # Derive 256-bit key from master_key
         self._key = hashlib.sha256(master_key.encode("utf-8")).digest()
         self._aesgcm = AESGCM(self._key)
         logger.info("Initialized EnvelopeEncryptionService with CMEK key protection using AES-256-GCM.")
+
 
     def encrypt_field(self, plaintext: str) -> str:
         """Encrypts a sensitive text field using standard AES-256-GCM envelope encryption."""

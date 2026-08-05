@@ -1,6 +1,6 @@
 import logging
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import List, Dict, Optional
 from urllib.parse import urljoin, urlparse
@@ -28,7 +28,7 @@ class CrawledPage(BaseModel):
     title: str
     content: str
     metadata: Dict = Field(default_factory=dict)
-    crawled_at: datetime = Field(default_factory=datetime.utcnow)
+    crawled_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class CrawlResult(BaseModel):
     request_url: str

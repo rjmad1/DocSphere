@@ -63,7 +63,7 @@ class WidgetService:
         if widget_id not in self._widgets:
             return None
         
-        current = self._widgets[widget_id].dict()
+        current = self._widgets[widget_id].model_dump()
         current.update(updates)
         updated_config = WidgetConfig(**current)
         self._widgets[widget_id] = updated_config

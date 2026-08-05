@@ -53,3 +53,20 @@ class EntityMetadataModel(Base):
     state = Column(String, default="DRAFT")
     properties_json = Column(JSON, nullable=True)
     created_at = Column(DateTime, default=utc_now)
+
+class ApiKeyModel(Base):
+    __tablename__ = "api_keys"
+
+    key_id = Column(String, primary_key=True, index=True)
+    key_hash = Column(String, nullable=False, unique=True, index=True)
+    key_prefix = Column(String, nullable=False)
+    tenant_id = Column(String, nullable=False, index=True)
+    agent_id = Column(String, nullable=True)
+    scopes = Column(JSON, nullable=False)  # Store list of scopes as JSON
+    rate_limit_per_minute = Column(Integer, default=60)
+    created_at = Column(DateTime, default=utc_now)
+    expires_at = Column(DateTime, nullable=True)
+    is_active = Column(Boolean, default=True)
+    last_used_at = Column(DateTime, nullable=True)
+    usage_count = Column(Integer, default=0)
+

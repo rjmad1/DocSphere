@@ -119,7 +119,25 @@ class TestCoverageGapFiller(unittest.IsolatedAsyncioTestCase):
         )
         discord_resp = await discord.send_response(resp_discord)
         self.assertIn("embeds", discord_resp)
-        self.assertTrue(await discord.verify_request({}, b""))
+        # Discord verify_request: fail closed when EKOS_DISCORD_PUBLIC_KEY is not set
+        import os, hmac, hashlib
+        self.assertFalse(await discord.verify_request({}, b""))
+
+        # Positive path: set a public key and build a matching HMAC-SHA256 signature
+        test_key = "test_discord_pub_key"
+        timestamp = "1234567890"
+        body_bytes = b"discord_payload"
+        expected_sig = hmac.new(test_key.encode(), (timestamp.encode() + body_bytes), hashlib.sha256).hexdigest()
+        discord_headers = {
+            "X-Signature-Ed25519": expected_sig,
+            "X-Signature-Timestamp": timestamp
+        }
+        os.environ["EKOS_DISCORD_PUBLIC_KEY"] = test_key
+        try:
+            self.assertTrue(await discord.verify_request(discord_headers, body_bytes))
+            self.assertFalse(await discord.verify_request({"X-Signature-Ed25519": "bad", "X-Signature-Timestamp": timestamp}, body_bytes))
+        finally:
+            del os.environ["EKOS_DISCORD_PUBLIC_KEY"]
 
         # Telegram adapter
         telegram = TelegramAdapter(config=config)

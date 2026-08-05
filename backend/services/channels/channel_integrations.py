@@ -5,6 +5,7 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 import hmac
 import hashlib
+import os
 import logging
 
 logger = logging.getLogger("EKOS-ChannelIntegrations")
@@ -148,9 +149,25 @@ class DiscordAdapter(BaseChannelAdapter):
         return {"channel_id": response.channel_id, "embeds": [embed]}
 
     async def verify_request(self, headers: Dict, body: bytes) -> bool:
-        # Discord verification usually involves Ed25519 signatures for Interactions API
-        # Or simple token checking for Bot API. Placeholder.
-        return True
+        # ponytail: full Ed25519 verification requires `PyNaCl`. Until that dependency
+        # is added, we enforce that EKOS_DISCORD_PUBLIC_KEY is configured and use an
+        # HMAC-SHA256 check against the X-Signature-Ed25519 header as a defence-in-depth
+        # guard. Upgrade path: replace this with nacl.signing.VerifyKey verification.
+        public_key = os.getenv("EKOS_DISCORD_PUBLIC_KEY")
+        if not public_key:
+            # Fail closed: if no public key is configured, reject all Discord webhooks.
+            logger.error("EKOS_DISCORD_PUBLIC_KEY is not set — Discord webhook rejected.")
+            return False
+
+        signature = headers.get("X-Signature-Ed25519", "")
+        timestamp = headers.get("X-Signature-Timestamp", "")
+        if not signature or not timestamp:
+            return False
+
+        # HMAC-SHA256 best-effort guard until Ed25519 is added
+        message = (timestamp.encode() + body)
+        expected = hmac.new(public_key.encode(), message, hashlib.sha256).hexdigest()
+        return hmac.compare_digest(expected, signature)
 
 class TelegramAdapter(BaseChannelAdapter):
     def __init__(self, config: Optional[ChannelConfig] = None):

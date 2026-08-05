@@ -4,7 +4,7 @@ import csv
 import io
 from enum import Enum
 from typing import List, Dict, Optional
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel, Field
 import logging
 
@@ -35,7 +35,7 @@ class ShareLink(BaseModel):
     """Represents a shared link for a conversation."""
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     conversation_id: str
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     expires_at: Optional[datetime] = None
     access_token: str = Field(default_factory=lambda: str(uuid.uuid4()))
     is_public: bool = False
@@ -51,8 +51,8 @@ class ExportService:
         if not conversation:
             logger.error(f"Conversation {request.conversation_id} not found for export")
             return None
-            
-        timestamp_str = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+
+        timestamp_str = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         filename = f"conversation_{conversation.id}_{timestamp_str}"
         content = ""
 
@@ -98,7 +98,7 @@ class ShareService:
         logger.info("ShareService initialized")
 
     def create_share_link(self, conversation_id: str, expires_hours: Optional[int] = None, is_public: bool = False) -> ShareLink:
-        expires_at = datetime.utcnow() + timedelta(hours=expires_hours) if expires_hours else None
+        expires_at = datetime.now(timezone.utc) + timedelta(hours=expires_hours) if expires_hours else None
         link = ShareLink(
             conversation_id=conversation_id,
             expires_at=expires_at,
@@ -111,8 +111,8 @@ class ShareService:
         link = self._links.get(link_id)
         if not link:
             return None
-            
-        if link.expires_at and datetime.utcnow() > link.expires_at:
+
+        if link.expires_at and datetime.now(timezone.utc) > link.expires_at:
             return None
             
         if not link.is_public and link.access_token != access_token:
