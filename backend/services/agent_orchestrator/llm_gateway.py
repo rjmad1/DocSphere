@@ -43,7 +43,16 @@ class MultiModelLLMGateway:
         
         # Determine model & provider based on task type
         routes = self._provider_matrix.get(request.task_type, [("gpt-4o", "openai")])
-        model_name, provider = routes[0]
+        # If preferred_model is provided and exists in routes, use it; otherwise fallback to first
+        if request.preferred_model:
+            for model, prov in routes:
+                if model == request.preferred_model:
+                    model_name, provider = model, prov
+                    break
+            else:
+                model_name, provider = routes[0]
+        else:
+            model_name, provider = routes[0]
 
         logger.info(f"LLM Gateway routing task '{request.task_type}' to Provider: {provider} | Model: {model_name}")
 
