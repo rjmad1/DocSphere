@@ -9,6 +9,7 @@ Welcome to the master knowledge base index of DocSphere (EKOS). Use the links be
 ### **Overview & State**
 * [00_PROJECT_STATE.md](file:///c:/Users/rajaj/Projects/DocSphere/wiki_repo/00_PROJECT_STATE.md) — Implementation state, build status, and active priorities.
 * [01_PRODUCT_KNOWLEDGE.md](file:///c:/Users/rajaj/Projects/DocSphere/wiki_repo/01_PRODUCT_KNOWLEDGE.md) — Vision, user personas, capabilities, parity matrix with DocsGPT, and roadmap.
+* [21_USE_CASES_AND_BUSINESS_BENEFITS.md](file:///c:/Users/rajaj/Projects/DocSphere/wiki_repo/21_USE_CASES_AND_BUSINESS_BENEFITS.md) — Comprehensive use cases and business benefits matrix across 7 directional dimensions.
 * [02_ENGINEERING_KNOWLEDGE.md](file:///c:/Users/rajaj/Projects/DocSphere/wiki_repo/02_ENGINEERING_KNOWLEDGE.md) — Subsystem architectures, service models, CMEK, database schemas, and testing.
 
 ### **Logs & Execution**
