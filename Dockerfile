@@ -21,5 +21,10 @@ EXPOSE 8000
 ENV POSTGRES_URI=sqlite:///./ekos_production.db
 ENV PORT=8000
 
+RUN adduser --system --group --uid 1001 appuser && \
+    chown -R appuser:appuser /app
+
+USER appuser
+
 # Run FastAPI using uvicorn
 CMD ["python", "-m", "backend.main"]
